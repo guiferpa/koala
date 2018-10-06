@@ -2,8 +2,10 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"io/ioutil"
 	"log"
+	"path"
 
 	"github.com/guiferpa/koala/file"
 )
@@ -23,7 +25,7 @@ func init() {
 func main() {
 	flag.Parse()
 
-	payload, err := ioutil.ReadFile(entry)
+	payload, err := ioutil.ReadFile(path.Clean(entry))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -40,7 +42,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if err := file.Build(bundled, newestContent); err != nil {
+	n, err := file.Build(bundled, newestContent)
+	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println(n)
 }

@@ -9,6 +9,7 @@ import (
 	"strings"
 )
 
+// Target is a struct to save the target info
 type Target struct {
 	Tag     string
 	Library string
@@ -18,6 +19,7 @@ func (t Target) String() string {
 	return fmt.Sprintf("%s %s", t.Tag, t.Library)
 }
 
+// FindOutTarget is a func to find out target line in entry file
 func FindOutTarget(tag, s string) ([]Target, error) {
 	targets := make([]Target, 0)
 	scnr := bufio.NewScanner(bytes.NewBufferString(s))
@@ -38,6 +40,7 @@ func FindOutTarget(tag, s string) ([]Target, error) {
 	return targets, nil
 }
 
+// ReplaceTarget is a func to replace targets by content from libraries
 func ReplaceTarget(targets []Target, s string) (string, error) {
 	for _, target := range targets {
 		library, err := ioutil.ReadFile(target.Library)

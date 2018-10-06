@@ -11,7 +11,7 @@ const base = "./tmp"
 func TestBuildFileIfDirNotExists(t *testing.T) {
 	name := path.Join(base, "1", "llama.txt")
 	txt := "testing..."
-	if err := Build(name, txt); err != nil {
+	if _, err := Build(name, txt); err != nil {
 		t.Error(err)
 	}
 	defer func(d string) {
@@ -28,7 +28,7 @@ func TestBuildFileIfDirAlreadyExists(t *testing.T) {
 	if err := os.MkdirAll(dir, PermDirectory); err != nil {
 		t.Fatal(err)
 	}
-	if err := Build(name, txt); err != nil {
+	if _, err := Build(name, txt); err != nil {
 		t.Error(err)
 	}
 	defer func(d string) {
