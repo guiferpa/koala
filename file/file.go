@@ -9,7 +9,7 @@ const (
 	// PermDirectory is a alias for permission of bundle directory
 	PermDirectory = 0777
 	// PermFile is a alias for permission of bundle file
-	PermFile = 0644
+	PermFile = 0755
 )
 
 // Build is the func to create the bundle file
@@ -22,19 +22,19 @@ func Build(name, s string) (int, error) {
 		return 0, err
 	}
 
-	file, err := os.Create(name)
+	f, err := os.Create(name)
 	if err != nil {
 		return 0, err
 	}
 
-	n, err := file.WriteString(s)
+	n, err := f.WriteString(s)
 	if err != nil {
 		return 0, err
 	}
 
-	if err = file.Chmod(PermFile); err != nil {
+	if err = f.Chmod(PermFile); err != nil {
 		return 0, err
 	}
 
-	return n, file.Close()
+	return n, f.Close()
 }
