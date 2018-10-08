@@ -39,7 +39,7 @@ $(DEP):
 	go get -v -u github.com/golang/dep/cmd/dep
 
 release: $(GORELEASER)
-	goreleaser
+	goreleaser --rm-dist
 
 cover: test
 	go tool cover -html=coverage-all.out
