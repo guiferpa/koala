@@ -19,8 +19,8 @@ func (t Target) String() string {
 	return fmt.Sprintf("%s %s", t.Tag, t.Library)
 }
 
-// FindOutTarget is a func to find out target line in entry file
-func FindOutTarget(tag, s string) ([]Target, error) {
+// FindOutTargets is a func to find out target line in entry file
+func FindOutTargets(tag, s string) ([]Target, error) {
 	targets := make([]Target, 0)
 	scnr := bufio.NewScanner(bytes.NewBufferString(s))
 	for scnr.Scan() {
@@ -29,7 +29,7 @@ func FindOutTarget(tag, s string) ([]Target, error) {
 			if len(claimLibrary) > 2 {
 				return nil, errors.New("import syntax wrong")
 			}
-			if len(claimLibrary) == 2 {
+			if len(claimLibrary) == 2 && claimLibrary[0] == tag {
 				targets = append(targets, Target{
 					Tag:     claimLibrary[0],
 					Library: claimLibrary[1],
@@ -37,11 +37,14 @@ func FindOutTarget(tag, s string) ([]Target, error) {
 			}
 		}
 	}
+	if len(targets) == 0 {
+		return nil, errors.New("any target founded")
+	}
 	return targets, nil
 }
 
-// ReplaceTarget is a func to replace targets by content from libraries
-func ReplaceTarget(targets []Target, s string) (string, error) {
+// ReplaceTargets is a func to replace targets by content from libraries
+func ReplaceTargets(targets []Target, s string) (string, error) {
 	for _, target := range targets {
 		library, err := ioutil.ReadFile(target.Library)
 		if err != nil {

@@ -14,6 +14,15 @@ func TestBinary(t *testing.T) {
 	}
 }
 
+func TestBinaryFromTail(t *testing.T) {
+	in := []string{"binary", "a", "b", "c", "d"}
+	expected := "binary"
+	args := Parse(in).Tail()
+	if result := args.Binary(); result != expected {
+		t.Errorf("unexpected result, result: %v, expected: %v", result, expected)
+	}
+}
+
 func TestCorretArgumentsPassed(t *testing.T) {
 	in := []string{"binary", "a", "b", "c", "d"}
 	expected := fmt.Sprintf("%v", []string{"a", "b", "c", "d"})
