@@ -6,34 +6,41 @@ import (
 	"testing"
 )
 
-const base = "./tmp"
-
 func TestBuildFileIfDirNotExists(t *testing.T) {
-	name := path.Join(base, "1", "llama.txt")
+	name := path.Join(Suite.Temp, "1", "llama.txt")
 	txt := "testing..."
-	if _, err := Build(name, txt); err != nil {
+
+	result, err := Build(name, txt)
+	if err != nil {
 		t.Error(err)
 	}
-	defer func(d string) {
-		if err := os.RemoveAll(d); err != nil {
-			t.Fatal(err)
-		}
-	}(base)
+
+	expected := len([]byte(txt))
+	if result != expected {
+		t.Errorf("unexpected result, result: %v bytes, expected: %v bytes", result, expected)
+	}
+
+	defer Suite.RemoveTemp(t)
 }
 
 func TestBuildFileIfDirAlreadyExists(t *testing.T) {
-	dir := path.Join(base, "2")
+	dir := path.Join(Suite.Temp, "2")
 	name := path.Join(dir, "koala.txt")
 	txt := "testing..."
+
 	if err := os.MkdirAll(dir, PermDirectory); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := Build(name, txt); err != nil {
+
+	result, err := Build(name, txt)
+	if err != nil {
 		t.Error(err)
 	}
-	defer func(d string) {
-		if err := os.RemoveAll(d); err != nil {
-			t.Fatal(err)
-		}
-	}(base)
+
+	expected := len([]byte(txt))
+	if result != expected {
+		t.Errorf("unexpected result, result: %v bytes, expected: %v bytes", result, expected)
+	}
+
+	defer Suite.RemoveTemp(t)
 }

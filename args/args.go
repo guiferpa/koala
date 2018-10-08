@@ -35,7 +35,7 @@ func (a Arguments) Tail() Arguments {
 	if len(a.args) <= 1 {
 		return Arguments{args: []string{}}
 	}
-	return Arguments{args: a.args[1:]}
+	return Arguments{bin: a.bin, args: a.args[1:]}
 }
 
 // Parse is a func to transform the arguments in a struct for easier manipulate the arguments

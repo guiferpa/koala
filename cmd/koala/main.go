@@ -51,12 +51,12 @@ func main() {
 
 	currentContent := string(payload)
 
-	targets, err := file.FindOutTarget(tag, currentContent)
+	targets, err := file.FindOutTargets(tag, currentContent)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	newestContent, err := file.ReplaceTarget(targets, currentContent)
+	newestContent, err := file.ReplaceTargets(targets, currentContent)
 	if err != nil {
 		log.Fatal(err)
 	}
