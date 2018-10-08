@@ -5,9 +5,9 @@ import (
 )
 
 // ErrEndOfArgs is a error type for EOA (End of arguments) error
-type ErrEndOfArgs struct{}
+type errEndOfArgs struct{}
 
-func (e *ErrEndOfArgs) Error() string {
+func (e *errEndOfArgs) Error() string {
 	return "end of arguments"
 }
 
@@ -25,7 +25,7 @@ func (a Arguments) Binary() string {
 // First is a func to get the first argument
 func (a Arguments) First() (string, error) {
 	if len(a.args) == 0 {
-		return "", &ErrEndOfArgs{}
+		return "", &errEndOfArgs{}
 	}
 	return a.args[0], nil
 }
@@ -33,7 +33,7 @@ func (a Arguments) First() (string, error) {
 // Tail is a func that leaving the first and get the rest
 func (a Arguments) Tail() Arguments {
 	if len(a.args) <= 1 {
-		return Arguments{args: []string{}}
+		return Arguments{bin: a.bin, args: []string{}}
 	}
 	return Arguments{bin: a.bin, args: a.args[1:]}
 }

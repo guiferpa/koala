@@ -38,7 +38,7 @@ $(GORELEASER): $(DEP)
 $(DEP):
 	go get -v -u github.com/golang/dep/cmd/dep
 
-release: $(GORELEASER)
+release: test $(GORELEASER)
 	goreleaser --rm-dist
 
 cover: test

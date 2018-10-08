@@ -3,11 +3,16 @@ package file
 import (
 	"bufio"
 	"bytes"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"strings"
 )
+
+type errAnyTargetFounded struct{}
+
+func (e *errAnyTargetFounded) Error() string {
+	return "any target founded"
+}
 
 // Target is a struct to save the target info
 type Target struct {
@@ -24,21 +29,24 @@ func FindOutTargets(tag, s string) ([]Target, error) {
 	targets := make([]Target, 0)
 	scnr := bufio.NewScanner(bytes.NewBufferString(s))
 	for scnr.Scan() {
-		if strings.HasPrefix(scnr.Text(), tag) {
-			claimLibrary := strings.Split(scnr.Text(), " ")
-			if len(claimLibrary) > 2 {
-				return nil, errors.New("import syntax wrong")
+		line := strings.TrimSpace(scnr.Text())
+		if strings.HasPrefix(line, tag) {
+			claimLibrary := strings.Split(line, " ")
+			if len(claimLibrary) != 2 {
+				continue
 			}
-			if len(claimLibrary) == 2 && claimLibrary[0] == tag {
+			lineTag := claimLibrary[0]
+			lineValue := claimLibrary[1]
+			if lineTag == tag {
 				targets = append(targets, Target{
-					Tag:     claimLibrary[0],
-					Library: claimLibrary[1],
+					Tag:     lineTag,
+					Library: lineValue,
 				})
 			}
 		}
 	}
 	if len(targets) == 0 {
-		return nil, errors.New("any target founded")
+		return nil, &errAnyTargetFounded{}
 	}
 	return targets, nil
 }
