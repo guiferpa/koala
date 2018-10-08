@@ -16,7 +16,7 @@ install: $(KOALA)
 $(KOALA):
 	go build -v -o $(KOALA) ./cmd/$(BIN)
 
-test: lint
+test:
 	$(shell echo "mode: count" > coverage-all.out)
 	for pkg in $(PACKAGES); do \
 		go test -cover -coverprofile=coverage.out -covermode=count $$pkg; \
@@ -28,15 +28,6 @@ lint: $(GOMETALINTER)
 
 $(GOMETALINTER):
 	go get -v -u github.com/alecthomas/gometalinter
-
-$(GORELEASER): $(DEP)
-	go get -d github.com/goreleaser/goreleaser
-	cd $(GOPATH)/src/github.com/goreleaser/goreleaser \
-		&& dep ensure -vendor-only \
-		&& go install
-
-$(DEP):
-	go get -v -u github.com/golang/dep/cmd/dep
 
 release: $(GORELEASER)
 	goreleaser --rm-dist
