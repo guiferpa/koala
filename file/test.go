@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/alecthomas/template"
+	"text/template"
 )
 
 // Suite is a instance of Test struct
