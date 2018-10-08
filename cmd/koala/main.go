@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -12,12 +11,6 @@ import (
 	"github.com/guiferpa/koala/args"
 	"github.com/guiferpa/koala/file"
 )
-
-var tag string
-
-func init() {
-	flag.StringVar(&tag, "tag", "import", "set a custom tag to mark a target, line that will be replaced by the assign content")
-}
 
 // ErrRequiredArg is a error type for input error
 type errRequiredArg struct {
@@ -30,18 +23,23 @@ func (err *errRequiredArg) Error() string {
 }
 
 func main() {
-	flag.Parse()
-	arguments := args.Parse(os.Args)
-	tailargs := arguments.Tail()
+	entryargs := args.Parse(os.Args)
+	bundledargs := entryargs.Tail()
+	flagargs := bundledargs.Tail()
 
-	entry, err := arguments.First()
+	entry, err := entryargs.First()
 	if err != nil {
 		log.Fatal(&errRequiredArg{arg: "entry", reason: err})
 	}
 
-	bundled, err := tailargs.First()
+	bundled, err := bundledargs.First()
 	if err != nil {
 		log.Fatal(&errRequiredArg{arg: "bundled", reason: err})
+	}
+
+	tag, err := flagargs.First()
+	if err != nil {
+		log.Println(fmt.Sprintf("no custom tag then by default will be use <%v> as tag", file.DefaultTag))
 	}
 
 	payload, err := ioutil.ReadFile(path.Clean(entry))

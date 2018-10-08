@@ -14,6 +14,9 @@ func (e *errAnyTargetFounded) Error() string {
 	return "any target founded"
 }
 
+// DefaultTag is a fallback value for tag input
+const DefaultTag = "import"
+
 // Target is a struct to save the target info
 type Target struct {
 	Tag     string
@@ -26,6 +29,9 @@ func (t Target) String() string {
 
 // FindOutTargets is a func to find out target line in entry file
 func FindOutTargets(tag, s string) ([]Target, error) {
+	if tag == "" {
+		tag = DefaultTag
+	}
 	targets := make([]Target, 0)
 	scnr := bufio.NewScanner(bytes.NewBufferString(s))
 	for scnr.Scan() {
